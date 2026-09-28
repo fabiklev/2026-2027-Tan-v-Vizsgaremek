@@ -7,7 +7,7 @@
 7. Use Case diagram
 8. Rendszerarchitektúra		 /
 9. Technológiák			 /
-10. Adatbázisterv + ER diagram
+10. Adatbázisterv + ER diagram  /
 11. REST API specifikáció
 12. UI/UX tervek	/
 13. Fő működési folyamatok 		/
