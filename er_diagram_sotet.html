@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Munkaplatform – ER diagram</title>
+<style>
+  html, body { margin: 0; background: #161616; color: #e8e8e8; font-family: system-ui, "Segoe UI", Arial, sans-serif; }
+  body { padding: 24px; }
+  h1 { font-size: 22px; font-weight: 500; margin: 0 0 16px; }
+  #erd { overflow-x: auto; background: #161616; }
+  #erd svg { background: #161616; }
+</style>
+</head>
+<body>
+<h1>Munkaplatform – ER diagram</h1>
+<div id="erd">Betöltés…</div>
+
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'base',
+  themeVariables: {
+    darkMode: true,
+    background: '#161616',
+    fontFamily: 'system-ui, "Segoe UI", Arial, sans-serif',
+    fontSize: '14px',
+    primaryColor: '#2f2f35',
+    primaryTextColor: '#f0f0f0',
+    primaryBorderColor: '#8a8a95',
+    secondaryColor: '#26262b',
+    tertiaryColor: '#1e1e22',
+    lineColor: '#b0b0ba',
+    textColor: '#f0f0f0',
+    edgeLabelBackground: '#161616',
+    attributeBackgroundColorOdd: '#26262b',
+    attributeBackgroundColorEven: '#1e1e22'
+  }
+});
+
+const definition = `erDiagram
+  users ||--o{ jobs : "meghirdet"
+  users |o--o{ jobs : "elvállal"
+  categories ||--o{ jobs : "tartozik"
+  jobs ||--o{ job_attachments : "csatolmány"
+  jobs ||--o{ applications : "kap"
+  users ||--o{ applications : "jelentkezik"
+  jobs ||--o{ messages : "beszélgetés"
+  users ||--o{ messages : "küld"
+  users ||--o{ messages : "fogad"
+  users ||--o{ notifications : "kap"
+  jobs |o--o{ notifications : "kapcsolódik"
+  jobs ||--o{ reviews : "értékelés"
+  users ||--o{ reviews : "értékel"
+  users ||--o{ reviews : "értékelt"
+  users ||--o{ reports : "bejelent"
+  users |o--o{ reports : "bejelentett"
+  users |o--o{ reports : "kezel"
+  jobs |o--o{ reports : "érintett"
+  users {
+    int id PK
+    string name
+    string email UK
+    string password_hash
+    string phone
+    string city
+    string id_document_path
+    enum role
+    enum status
+  }
+  categories {
+    smallint id PK
+    string name UK
+  }
+  jobs {
+    int id PK
+    int client_id FK
+    int selected_helper_id FK
+    smallint category_id FK
+    string title
+    string city
+    datetime start_datetime
+    decimal duration_hours
+    int pay_amount
+    enum status
+  }
+  job_attachments {
+    int id PK
+    int job_id FK
+    string file_path
+  }
+  applications {
+    int id PK
+    int job_id FK
+    int helper_id FK
+    enum status
+  }
+  messages {
+    bigint id PK
+    int job_id FK
+    int sender_id FK
+    int receiver_id FK
+    text body
+    bool is_read
+  }
+  notifications {
+    bigint id PK
+    int user_id FK
+    int job_id FK
+    enum type
+    bool is_read
+  }
+  reviews {
+    int id PK
+    int job_id FK
+    int reviewer_id FK
+    int reviewee_id FK
+    tinyint rating
+    text comment
+  }
+  reports {
+    int id PK
+    int reporter_id FK
+    int reported_user_id FK
+    int job_id FK
+    int handled_by FK
+    enum status
+  }`;
+
+try {
+  const { svg } = await mermaid.render('erd-svg', definition);
+  document.getElementById('erd').innerHTML = svg;
+} catch (e) {
+  document.getElementById('erd').textContent = 'Nem sikerült betölteni a diagramot (internetkapcsolat kell hozzá): ' + e.message;
+}
+</script>
+</body>
+</html>
