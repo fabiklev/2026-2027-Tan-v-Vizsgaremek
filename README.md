@@ -12,6 +12,6 @@
 12. UI/UX tervek	/
 13. Fő működési folyamatok 		/
 14. Biztonsági terv  /
-15. Tesztelési terv
+15. Tesztelési terv /
 16. Projektmenedzsment/munkamegosztás. /
 17. Ütemterv
